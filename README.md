@@ -13,7 +13,7 @@
 
 ## 🌟 Key Features
 
-- **Hybrid Quantum-Classical Risk Engine**: Merges classical gradient boosting (30% weight) with quantum statevector classifier inference (70% weight) for optimal fraud detection recall ($98.9\%$).
+- **Hybrid Quantum-Classical Risk Engine**: Merges classical gradient boosting (30% weight) with quantum statevector classifier inference (70% weight) for optimal fraud detection recall ($91.0\%$).
 - **Variational Quantum Classifier (VQC)**: Built on Qiskit 1.3 with a 4-qubit quantum circuit employing 2-repetition `ZZFeatureMap` data encoding and `RealAmplitudes` ansatz.
 - **Automatic Account Discovery**: Automatically tracks sender and receiver account histories, roles (`SENDER`, `RECEIVER`), transaction counts, and baseline metrics without requiring manual registration.
 - **Historical Behavioural Risk Analysis**: Computes point-in-time sender amount deviation ratios ($x\times$ historical mean), 24-hour transaction burst rates, and receiver historical fraud alert records with strict data leakage prevention.
