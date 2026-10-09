@@ -1,0 +1,10 @@
+{
+  "type_CASH_IN": 104.0,
+  "type_CASH_OUT": 179.0,
+  "type_DEBIT": 94.0,
+  "type_PAYMENT": 117.0,
+  "type_TRANSFER": 202.0,
+  "hour_of_day": 966.0,
+  "day_of_week": 619.0,
+  "log_amount": 1197.0
+}

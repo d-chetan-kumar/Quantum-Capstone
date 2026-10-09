@@ -1,0 +1,45 @@
+{
+  "timestamp": "2026-10-09T17:16:37.062615+00:00",
+  "num_samples": 100,
+  "throughput_tps": 22.19,
+  "xgboost": {
+    "avg_ms": 41.94,
+    "p50_ms": 42.38,
+    "p95_ms": 47.99,
+    "p99_ms": 52.7,
+    "min_ms": 27.96,
+    "max_ms": 57.41
+  },
+  "vqc": {
+    "avg_ms": 41.71,
+    "p50_ms": 42.59,
+    "p95_ms": 48.06,
+    "p99_ms": 50.65,
+    "min_ms": 27.14,
+    "max_ms": 52.02
+  },
+  "hybrid_engine": {
+    "avg_ms": 0.01,
+    "p50_ms": 0.01,
+    "p95_ms": 0.01,
+    "p99_ms": 0.02,
+    "min_ms": 0.0,
+    "max_ms": 0.02
+  },
+  "behavioural_risk": {
+    "avg_ms": 31.95,
+    "p50_ms": 29.47,
+    "p95_ms": 47.29,
+    "p99_ms": 67.11,
+    "min_ms": 19.71,
+    "max_ms": 144.79
+  },
+  "full_pipeline": {
+    "avg_ms": 45.07,
+    "p50_ms": 45.34,
+    "p95_ms": 52.2,
+    "p99_ms": 58.33,
+    "min_ms": 29.05,
+    "max_ms": 59.52
+  }
+}

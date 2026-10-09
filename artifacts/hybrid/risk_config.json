@@ -1,0 +1,13 @@
+{
+  "version": "v1.0",
+  "thresholds": {
+    "safe_max": 0.3,
+    "review_max": 0.7,
+    "alert_min": 0.7
+  },
+  "labels": {
+    "SAFE": "Safe transaction - low risk",
+    "REVIEW": "Manual review required - moderate risk",
+    "ALERT": "High risk fraud alert triggered"
+  }
+}
