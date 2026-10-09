@@ -1,0 +1,29 @@
+{
+  "precision": 0.02454452346263145,
+  "recall": 0.8490518962075848,
+  "f1_score": 0.04770984339731098,
+  "roc_auc": 0.9374310624477775,
+  "pr_auc": 0.3231267299966542,
+  "confusion_matrix": [
+    [
+      815142,
+      135243
+    ],
+    [
+      605,
+      3403
+    ]
+  ],
+  "feature_importance": {
+    "type_CASH_IN": 104.0,
+    "type_CASH_OUT": 179.0,
+    "type_DEBIT": 94.0,
+    "type_PAYMENT": 117.0,
+    "type_TRANSFER": 202.0,
+    "hour_of_day": 966.0,
+    "day_of_week": 619.0,
+    "log_amount": 1197.0
+  },
+  "train_duration_seconds": 26.30773663520813,
+  "eval_duration_seconds": 1.0505461692810059
+}

@@ -7,10 +7,17 @@ from datetime import datetime, timezone
 from app.services.ml_service import ml_service
 from app.ml.vqc_service import vqc_service
 
-HYBRID_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../artifacts/hybrid"))
+def _get_hybrid_artifacts_dir() -> str:
+    backend_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../artifacts/hybrid"))
+    if os.path.exists(backend_path):
+        return backend_path
+    return os.path.abspath(os.path.join(os.path.dirname(__file__), "../../artifacts/hybrid"))
+
+HYBRID_DIR = _get_hybrid_artifacts_dir()
 HYBRID_CONFIG_PATH = os.path.join(HYBRID_DIR, "hybrid_config.json")
 RISK_CONFIG_PATH = os.path.join(HYBRID_DIR, "risk_config.json")
 EVALUATION_PATH = os.path.join(HYBRID_DIR, "hybrid_evaluation.json")
+
 
 class RiskEngine:
     def __init__(self):

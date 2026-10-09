@@ -9,12 +9,19 @@ from qiskit_algorithms.optimizers import COBYLA
 from qiskit_machine_learning.algorithms.classifiers import VQC
 from app.ml.quantum_features import extract_quantum_features
 
-ARTIFACTS_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../artifacts/quantum"))
+def _get_quantum_artifacts_dir() -> str:
+    backend_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../artifacts/quantum"))
+    if os.path.exists(backend_path):
+        return backend_path
+    return os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../artifacts/quantum"))
+
+ARTIFACTS_DIR = _get_quantum_artifacts_dir()
 VQC_MODEL_DIR = os.path.join(ARTIFACTS_DIR, "vqc_model")
 VQC_MODEL_PATH = os.path.join(VQC_MODEL_DIR, "model.vqc")
 WEIGHTS_PATH = os.path.join(VQC_MODEL_DIR, "weights.json")
 SCALER_PATH = os.path.join(ARTIFACTS_DIR, "quantum_scaler.pkl")
 METADATA_PATH = os.path.join(ARTIFACTS_DIR, "metadata.json")
+
 
 class VQCService:
     def __init__(self):

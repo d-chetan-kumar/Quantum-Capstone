@@ -17,9 +17,15 @@ from app.ml.vqc_service import vqc_service
 def get_vqc_status():
     return vqc_service.get_metadata()
 
+def _get_quantum_artifacts_dir() -> str:
+    backend_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../artifacts/quantum"))
+    if os.path.exists(backend_path):
+        return backend_path
+    return os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../../artifacts/quantum"))
+
 @router.get("/vqc/evaluation")
 def get_vqc_evaluation():
-    ARTIFACTS_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../../artifacts/quantum"))
+    ARTIFACTS_DIR = _get_quantum_artifacts_dir()
     eval_path = os.path.join(ARTIFACTS_DIR, "evaluation.json")
     if not os.path.exists(eval_path):
         raise HTTPException(status_code=404, detail="Evaluation not available.")
@@ -28,7 +34,7 @@ def get_vqc_evaluation():
 
 @router.get("/vqc/circuit", response_class=PlainTextResponse)
 def get_vqc_circuit():
-    ARTIFACTS_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../../artifacts/quantum"))
+    ARTIFACTS_DIR = _get_quantum_artifacts_dir()
     circuit_path = os.path.join(ARTIFACTS_DIR, "circuit.txt")
     if not os.path.exists(circuit_path):
         raise HTTPException(status_code=404, detail="Circuit not available.")
@@ -40,8 +46,9 @@ import io
 
 @router.get("/vqc/circuit/image")
 def get_vqc_circuit_image(dpi: int = 150):
-    ARTIFACTS_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../../artifacts/quantum"))
+    ARTIFACTS_DIR = _get_quantum_artifacts_dir()
     img_path = os.path.join(ARTIFACTS_DIR, "circuit.png")
+
     try:
         import matplotlib
         matplotlib.use("Agg")

@@ -5,7 +5,14 @@ import pandas as pd
 import xgboost as xgb
 from app.ml.features import extract_features
 
-ARTIFACTS_DIR = os.path.join(os.path.dirname(__file__), "../../../artifacts/models")
+def _get_models_artifacts_dir() -> str:
+    backend_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../artifacts/models"))
+    if os.path.exists(backend_path):
+        return backend_path
+    return os.path.abspath(os.path.join(os.path.dirname(__file__), "../../artifacts/models"))
+
+ARTIFACTS_DIR = _get_models_artifacts_dir()
+
 
 class MLService:
     def __init__(self):
