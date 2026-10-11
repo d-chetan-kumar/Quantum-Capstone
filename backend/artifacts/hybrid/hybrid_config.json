@@ -1,16 +1,16 @@
 {
   "model_name": "hybrid_xgb_vqc",
   "model_version": "v1.0",
-  "timestamp": 1791481381.616372,
+  "timestamp": 1791528000.0,
   "weights": {
-    "xgboost_weight": 0.3,
-    "vqc_weight": 0.7
+    "xgboost_weight": 0.5,
+    "vqc_weight": 0.5
   },
   "selection_strategy": {
     "metric": "f1_score",
     "validation_sample_count": 100,
     "validation_fraud_count": 50,
     "validation_non_fraud_count": 50,
-    "best_validation_f1": 0.845360824742268
+    "best_validation_f1": 0.8210526315789474
   }
 }

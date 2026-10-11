@@ -3,9 +3,9 @@ from app.services.risk_engine import risk_engine, RiskEngine
 
 def test_hybrid_probability_calculation():
     # Example mathematical verification:
-    # XGB = 0.8, VQC = 0.4, weights = 0.3 / 0.7 -> hybrid = 0.3*0.8 + 0.7*0.4 = 0.52
+    # XGB = 0.8, VQC = 0.4, weights = 0.5 / 0.5 -> hybrid = 0.5*0.8 + 0.5*0.4 = 0.60
     res = risk_engine.compute_risk(0.8, 0.4)
-    assert abs(res["hybrid_probability"] - 0.52) < 1e-4
+    assert abs(res["hybrid_probability"] - 0.60) < 1e-4
 
 def test_weight_sum_validation():
     cfg = risk_engine.get_config()
@@ -95,6 +95,28 @@ def test_real_model_predictions():
     assert 0.0 <= eval_res["classical_probability"] <= 1.0
     assert 0.0 <= eval_res["quantum_probability"] <= 1.0
     assert 0.0 <= eval_res["hybrid_probability"] <= 1.0
-    expected_hybrid = 0.3 * eval_res["classical_probability"] + 0.7 * eval_res["quantum_probability"]
+    expected_hybrid = risk_engine.xgb_weight * eval_res["classical_probability"] + risk_engine.vqc_weight * eval_res["quantum_probability"]
     assert abs(eval_res["hybrid_probability"] - expected_hybrid) < 1e-4
+
+def test_hybrid_weight_comparison_endpoint():
+    from fastapi.testclient import TestClient
+    from app.main import app
+
+    client = TestClient(app)
+    response = client.get("/api/v1/models/hybrid/weight-comparison")
+    assert response.status_code == 200
+    data = response.json()
+    assert "active_weights" in data
+    assert data["active_weights"]["xgboost_weight"] == 0.5
+    assert data["active_weights"]["vqc_weight"] == 0.5
+    assert "comparison" in data
+    assert "validation_set" in data["comparison"]
+    assert "test_set" in data["comparison"]
+    
+    # Verify test_set metrics for 50:50
+    test_50 = data["comparison"]["test_set"]["50% XGB + 50% VQC (Active Production)"]
+    assert abs(test_50["f1_score"] - 0.9073) < 0.001
+    assert abs(test_50["recall"] - 0.9300) < 0.001
+    assert abs(test_50["fpr"] - 0.12) < 0.001
+
 

@@ -49,6 +49,7 @@ def get_analytics_overview(db: Session = Depends(get_db)):
     vqc_avail = vqc_service.is_available()
     xgb_avail = (xgb_stat.get("status") == "available")
     hybrid_eval = risk_engine.get_evaluation()
+    hybrid_cfg = risk_engine.get_config()
 
     return {
         "system_status": {
@@ -63,6 +64,7 @@ def get_analytics_overview(db: Session = Depends(get_db)):
             "total_transactions": tx_count,
             "recent_transactions": recent_txs
         },
+        "hybrid_config": hybrid_cfg,
         "hybrid_evaluation": hybrid_eval
     }
 

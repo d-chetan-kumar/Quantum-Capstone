@@ -286,13 +286,13 @@ export default function TransactionDetail() {
                  <div className="space-y-4 text-sm">
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                        <div className="p-3 bg-slate-50 dark:bg-slate-800 rounded-lg">
-                          <span className="text-slate-500 text-xs block">Classical Prob (30%)</span>
+                          <span className="text-slate-500 text-xs block">Classical Prob ({((riskPrediction.xgboost_weight ?? 0.5) * 100).toFixed(0)}%)</span>
                           <span className="font-mono font-semibold text-indigo-500">
                              {(riskPrediction.classical_probability * 100).toFixed(1)}%
                           </span>
                        </div>
                        <div className="p-3 bg-slate-50 dark:bg-slate-800 rounded-lg">
-                          <span className="text-slate-500 text-xs block">Quantum Prob (70%)</span>
+                          <span className="text-slate-500 text-xs block">Quantum Prob ({((riskPrediction.vqc_weight ?? 0.5) * 100).toFixed(0)}%)</span>
                           <span className="font-mono font-semibold text-fuchsia-500">
                              {(riskPrediction.quantum_probability * 100).toFixed(1)}%
                           </span>
@@ -311,7 +311,7 @@ export default function TransactionDetail() {
                  </div>
              ) : (
                  <div className="text-center py-2">
-                    <p className="text-slate-500 text-sm italic mb-4">Combine XGBoost (30%) + VQC (70%) for unified risk decision</p>
+                    <p className="text-slate-500 text-sm italic mb-4">Combine XGBoost ({((riskPrediction?.xgboost_weight ?? 0.5) * 100).toFixed(0)}%) + VQC ({((riskPrediction?.vqc_weight ?? 0.5) * 100).toFixed(0)}%) for unified risk decision</p>
                     <button
                         onClick={handleRiskPredict}
                         className="px-6 py-2.5 bg-amber-500 hover:bg-amber-600 text-white font-semibold rounded-lg shadow-sm transition text-sm"

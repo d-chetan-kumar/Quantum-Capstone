@@ -229,7 +229,7 @@ export default function Simulator() {
               <div className="space-y-2 pt-2 border-t border-slate-200 dark:border-slate-800">
                 <div className="flex items-center justify-between p-2.5 bg-slate-50 dark:bg-slate-800 rounded-lg">
                   <span className="text-slate-600 dark:text-slate-400 text-xs flex items-center gap-1.5 font-medium">
-                    <Cpu size={14} className="text-indigo-500" /> XGBoost Risk (30%)
+                    <Cpu size={14} className="text-indigo-500" /> XGBoost Risk (50%)
                   </span>
                   <span className="font-mono font-bold text-indigo-500">
                     {(result.classical_probability * 100).toFixed(1)}%
@@ -238,7 +238,7 @@ export default function Simulator() {
 
                 <div className="flex items-center justify-between p-2.5 bg-slate-50 dark:bg-slate-800 rounded-lg">
                   <span className="text-slate-600 dark:text-slate-400 text-xs flex items-center gap-1.5 font-medium">
-                    <Activity size={14} className="text-fuchsia-500" /> VQC Risk (70%)
+                    <Activity size={14} className="text-fuchsia-500" /> VQC Risk (50%)
                   </span>
                   <span className="font-mono font-bold text-fuchsia-500">
                     {(result.quantum_probability * 100).toFixed(1)}%

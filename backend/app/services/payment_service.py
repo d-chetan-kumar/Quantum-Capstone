@@ -34,7 +34,7 @@ class PaymentService:
             raise ValueError("Sender ID and Receiver ID cannot be identical.")
 
         tx_id = str(uuid.uuid4())
-        t0 = time.time()
+        t0 = time.perf_counter()
 
         tx_dict = {
             "amount": amount,
@@ -47,7 +47,7 @@ class PaymentService:
 
         # 2. Model Inference & Hybrid Risk Engine Evaluation
         risk_res = risk_engine.evaluate_transaction(tx_dict, tx_id, db=db)
-        proc_time_ms = round((time.time() - t0) * 1000, 2)
+        proc_time_ms = round((time.perf_counter() - t0) * 1000, 2)
 
         # 3. Database Persistence (Transaction, ModelPrediction, FraudAlert)
         persisted = False
@@ -84,7 +84,7 @@ class PaymentService:
             # Persist ModelPrediction record
             pred_obj = ModelPrediction(
                 transaction_id=tx_id,
-                model_name="Hybrid (XGBoost 0.3 + VQC 0.7)",
+                model_name=f"Hybrid (XGBoost {risk_res['xgboost_weight']} + VQC {risk_res['vqc_weight']})",
                 model_version="v1.0",
                 fraud_probability=risk_res["classical_probability"],
                 quantum_probability=risk_res["quantum_probability"],

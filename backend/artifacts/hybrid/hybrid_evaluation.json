@@ -4,8 +4,8 @@
   "fraud_count": 100,
   "non_fraud_count": 100,
   "weights": {
-    "xgboost": 0.3,
-    "vqc": 0.7
+    "xgboost": 0.5,
+    "vqc": 0.5
   },
   "models": {
     "xgboost": {
@@ -26,36 +26,37 @@
       ]
     },
     "vqc": {
-      "precision": 0.5736434108527132,
-      "recall": 0.74,
-      "f1_score": 0.6462882096069869,
-      "roc_auc": 0.7087,
-      "pr_auc": 0.7587864783092367,
+      "precision": 0.6086956521739131,
+      "recall": 0.7,
+      "f1_score": 0.6511627906976745,
+      "roc_auc": 0.716,
+      "pr_auc": 0.7122605952857235,
       "confusion_matrix": [
         [
-          45,
-          55
+          55,
+          45
         ],
         [
-          26,
-          74
+          30,
+          70
         ]
       ]
     },
     "hybrid": {
-      "precision": 0.8584905660377359,
-      "recall": 0.91,
-      "f1_score": 0.883495145631068,
-      "roc_auc": 0.9314,
-      "pr_auc": 0.9078651189296609,
+      "precision": 0.8857142857142857,
+      "recall": 0.93,
+      "f1_score": 0.9073170731707317,
+      "roc_auc": 0.9391,
+      "pr_auc": 0.8944,
+      "false_positive_rate": 0.12,
       "confusion_matrix": [
         [
-          85,
-          15
+          88,
+          12
         ],
         [
-          9,
-          91
+          7,
+          93
         ]
       ]
     }

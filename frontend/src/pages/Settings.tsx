@@ -75,7 +75,7 @@ export default function Settings() {
             <span className="text-xs font-semibold text-slate-500 block flex items-center gap-1.5">
               <Cpu size={14} className="text-indigo-500" /> Classical XGBoost Weight
             </span>
-            <span className="font-mono text-2xl font-extrabold text-indigo-500">30% (0.30)</span>
+            <span className="font-mono text-2xl font-extrabold text-indigo-500">50% (0.50)</span>
             <p className="text-[11px] text-slate-400">Fixed weight selected by validation set grid search.</p>
           </div>
 
@@ -83,7 +83,7 @@ export default function Settings() {
             <span className="text-xs font-semibold text-slate-500 block flex items-center gap-1.5">
               <Activity size={14} className="text-fuchsia-500" /> Quantum VQC Weight
             </span>
-            <span className="font-mono text-2xl font-extrabold text-fuchsia-500">70% (0.70)</span>
+            <span className="font-mono text-2xl font-extrabold text-fuchsia-500">50% (0.50)</span>
             <p className="text-[11px] text-slate-400">Fixed weight selected by validation set grid search.</p>
           </div>
         </div>

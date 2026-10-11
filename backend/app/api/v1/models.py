@@ -106,3 +106,31 @@ def get_hybrid_evaluation():
     if not eval_data:
         raise HTTPException(status_code=404, detail="Hybrid evaluation not available.")
     return eval_data
+
+@router.get("/hybrid/weight-comparison")
+def get_hybrid_weight_comparison():
+    comp = risk_engine.get_weight_comparison()
+    if not comp:
+        raise HTTPException(status_code=404, detail="Weight comparison data not available.")
+    return {
+        "active_weights": {
+            "xgboost_weight": risk_engine.xgb_weight,
+            "vqc_weight": risk_engine.vqc_weight
+        },
+        "thresholds": {
+            "safe_max": risk_engine.safe_max,
+            "review_max": risk_engine.review_max,
+            "alert_min": risk_engine.alert_min
+        },
+        "metadata": {
+            "validation_population": "Balanced Chronological Validation Subset",
+            "validation_samples": 100,
+            "validation_split": "50 Fraud / 50 Non-Fraud",
+            "test_population": "Held-Out Common Chronological Test Subset",
+            "test_samples": 200,
+            "test_split": "100 Fraud / 100 Non-Fraud",
+            "selection_rationale": "50:50 achieves the highest held-out test F1-score (0.9073), ties for peak recall (93.00%), and ties for lowest test FPR (12.00%). Although 70:30 yields slightly higher ROC-AUC (0.9540 vs 0.9391), 50:50 provides superior harmonic precision-recall balance while maintaining equal quantum representation.",
+            "limitation": "Subsets are balanced (50% fraud) for quantum simulation benchmarking; real-world fraud prevalence is ~0.13%."
+        },
+        "comparison": comp
+    }

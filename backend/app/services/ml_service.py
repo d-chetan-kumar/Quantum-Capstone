@@ -47,7 +47,7 @@ class MLService:
         if not self.model:
             raise Exception("Model not loaded")
             
-        start_time = time.time()
+        start_time = time.perf_counter()
         df = pd.DataFrame([transaction_dict])
         features = extract_features(df)
         
@@ -57,7 +57,7 @@ class MLService:
             
         prob = float(self.model.predict_proba(features)[0][1])
         pred_class = int(self.model.predict(features)[0])
-        exec_time = (time.time() - start_time) * 1000
+        exec_time = (time.perf_counter() - start_time) * 1000
         
         return {
             "fraud_probability": prob,

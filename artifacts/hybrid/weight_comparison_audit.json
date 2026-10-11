@@ -1,0 +1,96 @@
+{
+  "validation_set": {
+    "30% XGB + 70% VQC (Historical Baseline)": {
+      "name": "30% XGB + 70% VQC (Historical Baseline)",
+      "precision": 0.7755102040816326,
+      "recall": 0.76,
+      "f1_score": 0.7676767676767676,
+      "roc_auc": 0.8744000000000001,
+      "pr_auc": 0.8883400645738548,
+      "fpr": 0.22,
+      "confusion_matrix": {
+        "TN": 39,
+        "FP": 11,
+        "FN": 12,
+        "TP": 38
+      }
+    },
+    "50% XGB + 50% VQC (Active Production)": {
+      "name": "50% XGB + 50% VQC (Active Production)",
+      "precision": 0.8666666666666667,
+      "recall": 0.78,
+      "f1_score": 0.8210526315789474,
+      "roc_auc": 0.9212,
+      "pr_auc": 0.9332253339026098,
+      "fpr": 0.12,
+      "confusion_matrix": {
+        "TN": 44,
+        "FP": 6,
+        "FN": 11,
+        "TP": 39
+      }
+    },
+    "70% XGB + 30% VQC (Alternative Candidate)": {
+      "name": "70% XGB + 30% VQC (Alternative Candidate)",
+      "precision": 0.8666666666666667,
+      "recall": 0.78,
+      "f1_score": 0.8210526315789474,
+      "roc_auc": 0.9296,
+      "pr_auc": 0.9394727334864541,
+      "fpr": 0.12,
+      "confusion_matrix": {
+        "TN": 44,
+        "FP": 6,
+        "FN": 11,
+        "TP": 39
+      }
+    }
+  },
+  "test_set": {
+    "30% XGB + 70% VQC (Historical Baseline)": {
+      "name": "30% XGB + 70% VQC (Historical Baseline)",
+      "precision": 0.8611111111111112,
+      "recall": 0.93,
+      "f1_score": 0.8942307692307693,
+      "roc_auc": 0.9191,
+      "pr_auc": 0.8583711556538111,
+      "fpr": 0.15,
+      "confusion_matrix": {
+        "TN": 85,
+        "FP": 15,
+        "FN": 7,
+        "TP": 93
+      }
+    },
+    "50% XGB + 50% VQC (Active Production)": {
+      "name": "50% XGB + 50% VQC (Active Production)",
+      "precision": 0.8857142857142857,
+      "recall": 0.93,
+      "f1_score": 0.9073170731707317,
+      "roc_auc": 0.9391,
+      "pr_auc": 0.8944290543236386,
+      "fpr": 0.12,
+      "confusion_matrix": {
+        "TN": 88,
+        "FP": 12,
+        "FN": 7,
+        "TP": 93
+      }
+    },
+    "70% XGB + 30% VQC (Alternative Candidate)": {
+      "name": "70% XGB + 30% VQC (Alternative Candidate)",
+      "precision": 0.8846153846153846,
+      "recall": 0.92,
+      "f1_score": 0.9019607843137255,
+      "roc_auc": 0.954,
+      "pr_auc": 0.9348830662743851,
+      "fpr": 0.12,
+      "confusion_matrix": {
+        "TN": 88,
+        "FP": 12,
+        "FN": 8,
+        "TP": 92
+      }
+    }
+  }
+}

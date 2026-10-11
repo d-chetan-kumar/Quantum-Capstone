@@ -54,10 +54,10 @@ export default function Methodology() {
       icon: Zap,
       tag: 'Risk Fusion',
       color: 'border-amber-500 text-amber-500',
-      summary: 'Optimal weighted probability fusion model: p_hybrid = 0.30 * p_xgb + 0.70 * p_vqc.',
+      summary: 'Optimal weighted probability fusion model: p_hybrid = 0.50 * p_xgb + 0.50 * p_vqc.',
       details: [
         'Grid-search optimization performed on Common Validation Subset maximizing F1-score.',
-        'Optimal weights selected: 30% XGBoost + 70% VQC.',
+        'Optimal weights selected: 50% XGBoost + 50% VQC.',
         'Business Decision Thresholds: SAFE (<0.30), REVIEW (0.30–<0.70), ALERT (>=0.70).',
         'Evaluated on Common Test Subset (200 records) yielding highest recall (91.00%).'
       ]

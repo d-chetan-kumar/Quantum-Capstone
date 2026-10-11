@@ -250,7 +250,7 @@ export default function RiskAnalysis() {
         <div className="flex items-center gap-3">
           <div className="px-3.5 py-1.5 rounded-xl bg-indigo-50 dark:bg-indigo-950/50 border border-indigo-200 dark:border-indigo-900 text-indigo-700 dark:text-indigo-300 text-xs font-mono font-semibold flex items-center gap-2">
             <Sliders size={14} className="text-indigo-500" />
-            <span>Configured Weights: 30% XGB + 70% VQC</span>
+            <span>Configured Weights: 50% XGB + 50% VQC</span>
           </div>
         </div>
       </div>
@@ -389,7 +389,7 @@ export default function RiskAnalysis() {
               </div>
 
               <div className="flex justify-between items-center text-[11px] text-slate-400 pt-1">
-                <span>Ensemble Weights: 30% XGBoost + 70% VQC</span>
+                <span>Ensemble Weights: 50% XGBoost + 50% VQC</span>
                 <span>Evaluated at: {new Date(prediction.created_at).toLocaleString()}</span>
               </div>
             </div>
@@ -420,7 +420,7 @@ export default function RiskAnalysis() {
               <span>Classical XGBoost</span>
             </div>
             <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400">
-              Weight: 30%
+              Weight: 50%
             </span>
           </div>
 
@@ -449,7 +449,7 @@ export default function RiskAnalysis() {
               <span>Quantum VQC</span>
             </div>
             <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-fuchsia-50 dark:bg-fuchsia-950 text-fuchsia-600 dark:text-fuchsia-400">
-              Weight: 70%
+              Weight: 50%
             </span>
           </div>
 
@@ -492,7 +492,7 @@ export default function RiskAnalysis() {
 
           <div className="text-xs text-slate-600 dark:text-slate-400 space-y-2">
             <p>
-              <strong>Formula:</strong> <code>0.30 × XGB + 0.70 × VQC</code>
+              <strong>Formula:</strong> <code>0.50 × XGB + 0.50 × VQC</code>
             </p>
             <p>
               Combines high classical precision with quantum non-linear Hilbert feature embeddings.
@@ -631,12 +631,12 @@ export default function RiskAnalysis() {
                 <td className="py-3 px-4 font-sans text-slate-500">Common Balanced Subset (200 rows)</td>
               </tr>
               <tr className="bg-amber-50/50 dark:bg-amber-950/20 font-bold">
-                <td className="py-3 px-4 font-sans font-extrabold text-amber-600 dark:text-amber-400">Hybrid Risk Engine (30/70)</td>
-                <td className="py-3 px-4">{(hybridEval?.models?.hybrid?.precision * 100 || 85.8).toFixed(1)}%</td>
-                <td className="py-3 px-4 font-bold text-emerald-600">{(hybridEval?.models?.hybrid?.recall * 100 || 91.0).toFixed(1)}%</td>
-                <td className="py-3 px-4">{(hybridEval?.models?.hybrid?.f1_score * 100 || 88.3).toFixed(1)}%</td>
-                <td className="py-3 px-4 font-extrabold text-amber-600">{(hybridEval?.models?.hybrid?.roc_auc * 100 || 93.1).toFixed(1)}%</td>
-                <td className="py-3 px-4">{(hybridEval?.models?.hybrid?.pr_auc * 100 || 90.8).toFixed(1)}%</td>
+                <td className="py-3 px-4 font-sans font-extrabold text-amber-600 dark:text-amber-400">Hybrid Risk Engine (50/50)</td>
+                <td className="py-3 px-4">{(hybridEval?.models?.hybrid?.precision * 100 || 88.6).toFixed(1)}%</td>
+                <td className="py-3 px-4 font-bold text-emerald-600">{(hybridEval?.models?.hybrid?.recall * 100 || 93.0).toFixed(1)}%</td>
+                <td className="py-3 px-4">{(hybridEval?.models?.hybrid?.f1_score * 100 || 90.7).toFixed(1)}%</td>
+                <td className="py-3 px-4 font-extrabold text-amber-600">{(hybridEval?.models?.hybrid?.roc_auc * 100 || 93.9).toFixed(1)}%</td>
+                <td className="py-3 px-4">{(hybridEval?.models?.hybrid?.pr_auc * 100 || 89.4).toFixed(1)}%</td>
                 <td className="py-3 px-4 font-sans text-amber-800 dark:text-amber-300">Common Balanced Subset (200 rows)</td>
               </tr>
             </tbody>

@@ -81,8 +81,8 @@ export default function Dashboard() {
 
         <MetricCard
           title="Optimal Weights"
-          value="30% / 70%"
-          subtitle="30% XGBoost + 70% VQC"
+          value={data?.hybrid_config ? `${(data.hybrid_config.xgboost_weight * 100).toFixed(0)}% / ${(data.hybrid_config.vqc_weight * 100).toFixed(0)}%` : "50% / 50%"}
+          subtitle={data?.hybrid_config ? `${(data.hybrid_config.xgboost_weight * 100).toFixed(0)}% XGBoost + ${(data.hybrid_config.vqc_weight * 100).toFixed(0)}% VQC` : "50% XGBoost + 50% VQC"}
           icon={Zap}
           accentColor="text-amber-500"
         />
@@ -192,7 +192,7 @@ export default function Dashboard() {
                 <StatusBadge status={sys.hybrid || 'unavailable'} />
               </div>
               <p className="text-[11px] text-amber-700 dark:text-amber-400">
-                Weights: 30% XGB + 70% VQC (Validation F1 Optimized).
+                Weights: 50% XGB + 50% VQC (50:50 Balanced Ensemble).
               </p>
             </div>
           </div>

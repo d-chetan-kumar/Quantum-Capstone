@@ -17,12 +17,13 @@ HYBRID_DIR = _get_hybrid_artifacts_dir()
 HYBRID_CONFIG_PATH = os.path.join(HYBRID_DIR, "hybrid_config.json")
 RISK_CONFIG_PATH = os.path.join(HYBRID_DIR, "risk_config.json")
 EVALUATION_PATH = os.path.join(HYBRID_DIR, "hybrid_evaluation.json")
+WEIGHT_COMPARISON_PATH = os.path.join(HYBRID_DIR, "weight_comparison_audit.json")
 
 
 class RiskEngine:
     def __init__(self):
-        self.xgb_weight = 0.3
-        self.vqc_weight = 0.7
+        self.xgb_weight = 0.5
+        self.vqc_weight = 0.5
         self.safe_max = 0.30
         self.review_max = 0.70
         self.alert_min = 0.70
@@ -34,8 +35,8 @@ class RiskEngine:
                 with open(HYBRID_CONFIG_PATH, "r", encoding="utf-8") as f:
                     cfg = json.load(f)
                     weights = cfg.get("weights", {})
-                    self.xgb_weight = float(weights.get("xgboost_weight", 0.3))
-                    self.vqc_weight = float(weights.get("vqc_weight", 0.7))
+                    self.xgb_weight = float(weights.get("xgboost_weight", 0.5))
+                    self.vqc_weight = float(weights.get("vqc_weight", 0.5))
             except Exception as e:
                 print(f"Failed to load hybrid config: {e}")
 
@@ -68,6 +69,21 @@ class RiskEngine:
                     return json.load(f)
             except Exception as e:
                 print(f"Failed to load hybrid evaluation: {e}")
+        return None
+
+    def get_weight_comparison(self) -> Optional[Dict[str, Any]]:
+        target_paths = [
+            WEIGHT_COMPARISON_PATH,
+            os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../artifacts/hybrid/weight_comparison_audit.json")),
+            os.path.abspath(os.path.join(os.path.dirname(__file__), "../../artifacts/hybrid/weight_comparison_audit.json"))
+        ]
+        for p in target_paths:
+            if os.path.exists(p):
+                try:
+                    with open(p, "r", encoding="utf-8") as f:
+                        return json.load(f)
+                except Exception as e:
+                    print(f"Failed to load weight comparison from {p}: {e}")
         return None
 
     def compute_risk(self, classical_prob: float, quantum_prob: float) -> Dict[str, Any]:
@@ -121,18 +137,23 @@ class RiskEngine:
             }
         }
 
-        # 4. Create database Alert if risk_level == 'ALERT' and db session provided
+        # 4. Create database Alert if risk_level == 'ALERT' and db session provided and transaction exists
         if risk_res["risk_level"] == "ALERT" and db is not None:
             try:
+                from app.models.transaction import Transaction
                 from app.models.alert import FraudAlert
-                alert_obj = FraudAlert(
-                    transaction_id=transaction_id,
-                    alert_reason=f"High hybrid fraud probability ({risk_res['hybrid_probability']:.4f})",
-                    resolved=False,
-                    created_at=datetime.now(timezone.utc)
-                )
-                db.add(alert_obj)
-                db.commit()
+                tx_exists = db.query(Transaction).filter(Transaction.transaction_id == transaction_id).first()
+                if tx_exists:
+                    existing_alert = db.query(FraudAlert).filter(FraudAlert.transaction_id == transaction_id).first()
+                    if not existing_alert:
+                        alert_obj = FraudAlert(
+                            transaction_id=transaction_id,
+                            alert_reason=f"High hybrid fraud probability ({risk_res['hybrid_probability']:.4f})",
+                            resolved=False,
+                            created_at=datetime.now(timezone.utc)
+                        )
+                        db.add(alert_obj)
+                        db.commit()
             except Exception as e:
                 print(f"Alert persistence skipped: {e}")
 

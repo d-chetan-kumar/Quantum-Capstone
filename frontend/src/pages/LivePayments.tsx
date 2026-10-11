@@ -259,7 +259,7 @@ export default function LivePayments() {
               <div className="space-y-2 pt-3 border-t border-slate-200 dark:border-slate-800">
                 <div className="p-2.5 bg-slate-50 dark:bg-slate-800 rounded-lg flex justify-between items-center text-xs">
                   <span className="text-slate-500 flex items-center gap-1">
-                    <Cpu size={14} className="text-indigo-500" /> XGBoost Risk (30%)
+                    <Cpu size={14} className="text-indigo-500" /> XGBoost Risk (50%)
                   </span>
                   <span className="font-mono font-bold text-indigo-500">
                     {(selectedPayment.classical_probability * 100).toFixed(1)}%
@@ -268,7 +268,7 @@ export default function LivePayments() {
 
                 <div className="p-2.5 bg-slate-50 dark:bg-slate-800 rounded-lg flex justify-between items-center text-xs">
                   <span className="text-slate-500 flex items-center gap-1">
-                    <Activity size={14} className="text-fuchsia-500" /> VQC Risk (70%)
+                    <Activity size={14} className="text-fuchsia-500" /> VQC Risk (50%)
                   </span>
                   <span className="font-mono font-bold text-fuchsia-500">
                     {(selectedPayment.quantum_probability * 100).toFixed(1)}%

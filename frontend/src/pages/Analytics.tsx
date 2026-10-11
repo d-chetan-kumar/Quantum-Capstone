@@ -113,7 +113,7 @@ export default function Analytics() {
                 {hybrid && (
                   <tr className="bg-amber-50/40 dark:bg-amber-950/20 font-bold text-amber-900 dark:text-amber-200">
                     <td className="px-4 py-3 font-sans font-bold flex items-center gap-2">
-                      <Zap size={16} className="text-amber-500" /> Hybrid Risk Engine (0.3 XGB + 0.7 VQC)
+                      <Zap size={16} className="text-amber-500" /> Hybrid Risk Engine (50% XGB + 50% VQC)
                       <span className="text-[10px] bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300 px-2 py-0.5 rounded-full font-sans font-medium">
                         Highest Recall ({(hybrid.recall * 100).toFixed(1)}%)
                       </span>
