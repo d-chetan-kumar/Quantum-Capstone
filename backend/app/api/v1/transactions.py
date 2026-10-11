@@ -26,21 +26,99 @@ def create_transaction(transaction_in: TransactionCreate, db: Session = Depends(
     db.refresh(db_obj)
     return db_obj
 
+@router.get("", response_model=TransactionListResponse)
 @router.get("/", response_model=TransactionListResponse)
-def read_transactions(skip: int = 0, limit: int = 50, transaction_type: Optional[str] = None, status: Optional[str] = None, db: Session = Depends(get_db)):
-    query = db.query(Transaction)
-    if transaction_type: query = query.filter(Transaction.transaction_type == transaction_type)
-    if status: query = query.filter(Transaction.status == status)
-    
+def read_transactions(
+    skip: int = 0,
+    limit: int = 600,
+    transaction_type: Optional[str] = None,
+    status: Optional[str] = None,
+    risk_level: Optional[str] = None,
+    db: Session = Depends(get_db)
+):
+    query = db.query(Transaction, ModelPrediction).outerjoin(
+        ModelPrediction, Transaction.transaction_id == ModelPrediction.transaction_id
+    )
+
+    if transaction_type:
+        query = query.filter(Transaction.transaction_type == transaction_type)
+    if status:
+        query = query.filter(Transaction.status == status)
+    if risk_level:
+        query = query.filter(ModelPrediction.risk_level == risk_level)
+
     total = query.count()
-    items = query.order_by(desc(Transaction.created_at)).offset(skip).limit(limit).all()
-    return TransactionListResponse(items=items, total=total, page=(skip // limit) + 1, size=limit)
+    rows = query.order_by(desc(Transaction.timestamp)).offset(skip).limit(limit).all()
+
+    items = []
+    for tx, pred in rows:
+        r_level = pred.risk_level if pred else "SAFE"
+        h_prob = pred.hybrid_probability if pred else None
+        c_prob = pred.fraud_probability if pred else None
+        q_prob = pred.quantum_probability if pred else None
+
+        items.append({
+            "transaction_id": tx.transaction_id,
+            "transaction_type": tx.transaction_type,
+            "amount": tx.amount,
+            "sender_id": tx.sender_id,
+            "receiver_id": tx.receiver_id,
+            "location": tx.location,
+            "is_simulated": tx.is_simulated,
+            "timestamp": tx.timestamp,
+            "status": tx.status,
+            "risk_level": r_level,
+            "hybrid_probability": h_prob,
+            "classical_probability": c_prob,
+            "quantum_probability": q_prob,
+            "created_at": tx.created_at,
+            "updated_at": tx.updated_at
+        })
+
+    # Summary metrics across the whole dataset
+    all_preds = db.query(ModelPrediction.risk_level).all()
+    safe_cnt = sum(1 for p in all_preds if p[0] == "SAFE")
+    review_cnt = sum(1 for p in all_preds if p[0] == "REVIEW")
+    alert_cnt = sum(1 for p in all_preds if p[0] == "ALERT")
+    all_total = db.query(Transaction).count()
+
+    summary = {
+        "total": all_total,
+        "safe": safe_cnt,
+        "review": review_cnt,
+        "alert": alert_cnt
+    }
+
+    page_num = (skip // limit) + 1 if limit > 0 else 1
+    return TransactionListResponse(items=items, total=total, page=page_num, size=limit, summary=summary)
 
 @router.get("/{transaction_id}", response_model=TransactionResponse)
 def read_transaction(transaction_id: str, db: Session = Depends(get_db)):
     tx = db.query(Transaction).filter(Transaction.transaction_id == transaction_id).first()
-    if not tx: raise HTTPException(status_code=404, detail="Transaction not found")
-    return tx
+    if not tx:
+        raise HTTPException(status_code=404, detail="Transaction not found")
+
+    pred = db.query(ModelPrediction).filter(
+        ModelPrediction.transaction_id == tx.transaction_id
+    ).order_by(desc(ModelPrediction.created_at)).first()
+
+    return {
+        "transaction_id": tx.transaction_id,
+        "transaction_type": tx.transaction_type,
+        "amount": tx.amount,
+        "sender_id": tx.sender_id,
+        "receiver_id": tx.receiver_id,
+        "location": tx.location,
+        "is_simulated": tx.is_simulated,
+        "timestamp": tx.timestamp,
+        "status": tx.status,
+        "risk_level": pred.risk_level if pred else "SAFE",
+        "hybrid_probability": pred.hybrid_probability if pred else None,
+        "classical_probability": pred.fraud_probability if pred else None,
+        "quantum_probability": pred.quantum_probability if pred else None,
+        "created_at": tx.created_at,
+        "updated_at": tx.updated_at
+    }
 
 @router.post("/{transaction_id}/predict", response_model=PredictionResponse)
 def predict_transaction(transaction_id: str, db: Session = Depends(get_db)):

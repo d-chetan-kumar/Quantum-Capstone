@@ -42,6 +42,10 @@ class TransactionResponse(TransactionBase):
     transaction_id: UUID
     timestamp: datetime
     status: str
+    risk_level: Optional[str] = None
+    hybrid_probability: Optional[float] = None
+    classical_probability: Optional[float] = None
+    quantum_probability: Optional[float] = None
     created_at: datetime
     updated_at: datetime
 
@@ -62,3 +66,5 @@ class TransactionListResponse(BaseModel):
     total: int
     page: int
     size: int
+    summary: Optional[dict] = None
+

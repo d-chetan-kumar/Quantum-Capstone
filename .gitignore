@@ -11,9 +11,7 @@ env/
 # Data & Database
 data/
 *.csv
-*.db
 quantum_fraud.db
-backend/quantum_fraud.db
 
 # Node / React
 node_modules/

@@ -4,6 +4,7 @@ import axios from 'axios';
 import { API_BASE_URL } from '../config';
 import { MetricCard } from '../components/MetricCard';
 import { StatusBadge } from '../components/StatusBadge';
+import { RiskBadge } from '../components/RiskBadge';
 import { ShieldCheck, Cpu, Activity, Zap, ExternalLink, RefreshCw, CreditCard } from 'lucide-react';
 
 export default function Dashboard() {
@@ -124,7 +125,7 @@ export default function Dashboard() {
                     <th className="px-3 py-2.5">Transaction ID</th>
                     <th className="px-3 py-2.5">Amount</th>
                     <th className="px-3 py-2.5">Type</th>
-                    <th className="px-3 py-2.5">Status</th>
+                    <th className="px-3 py-2.5">AI Decision</th>
                     <th className="px-3 py-2.5 text-right">Action</th>
                   </tr>
                 </thead>
@@ -143,9 +144,7 @@ export default function Dashboard() {
                         {t.transaction_type}
                       </td>
                       <td className="px-3 py-3 font-sans">
-                        <span className="text-emerald-600 dark:text-emerald-400 font-medium text-xs">
-                          {t.status}
-                        </span>
+                        <RiskBadge level={t.risk_level || 'SAFE'} size="sm" />
                       </td>
                       <td className="px-3 py-3 text-right font-sans">
                         <Link

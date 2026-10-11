@@ -30,16 +30,20 @@ def get_analytics_overview(db: Session = Depends(get_db)):
         db.execute(text("SELECT 1"))
         db_connected = True
         tx_count = db.query(Transaction).count()
-        tx_list = db.query(Transaction).order_by(desc(Transaction.timestamp)).limit(10).all()
+        tx_rows = db.query(Transaction, ModelPrediction).outerjoin(
+            ModelPrediction, Transaction.transaction_id == ModelPrediction.transaction_id
+        ).order_by(desc(Transaction.timestamp)).limit(10).all()
         recent_txs = [
             {
                 "transaction_id": str(t.transaction_id),
                 "amount": float(t.amount),
                 "transaction_type": t.transaction_type,
                 "status": t.status,
+                "risk_level": p.risk_level if p else "SAFE",
+                "hybrid_probability": p.hybrid_probability if p else None,
                 "timestamp": t.timestamp.isoformat() if t.timestamp else None
             }
-            for t in tx_list
+            for t, p in tx_rows
         ]
     except Exception:
         db_connected = False
@@ -82,9 +86,9 @@ def get_risk_summary(db: Session = Depends(get_db)):
         preds = []
 
     total = len(preds)
-    safe_count = sum(1 for p in preds if p.risk_level == "SAFE" or (p.hybrid_probability is not None and p.hybrid_probability < 0.30))
-    review_count = sum(1 for p in preds if p.risk_level == "REVIEW" or (p.hybrid_probability is not None and 0.30 <= p.hybrid_probability < 0.70))
-    alert_count = sum(1 for p in preds if p.risk_level == "ALERT" or (p.hybrid_probability is not None and p.hybrid_probability >= 0.70))
+    safe_count = sum(1 for p in preds if (p.risk_level == "SAFE" if p.risk_level else (p.hybrid_probability < 0.30)))
+    review_count = sum(1 for p in preds if (p.risk_level == "REVIEW" if p.risk_level else (0.30 <= p.hybrid_probability < 0.70)))
+    alert_count = sum(1 for p in preds if (p.risk_level == "ALERT" if p.risk_level else (p.hybrid_probability >= 0.70)))
 
     buckets = {f"{i*10}-{(i+1)*10}%": 0 for i in range(10)}
     for p in preds:
