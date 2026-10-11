@@ -5,15 +5,15 @@
 [![Qiskit](https://img.shields.io/badge/Qiskit-1.3.0-6929C4.svg?style=flat&logo=qiskit)](https://qiskit.org/)
 [![XGBoost](https://img.shields.io/badge/XGBoost-2.0.3-EC4899.svg?style=flat)](https://xgboost.readthedocs.io/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-4169E1.svg?style=flat&logo=postgresql)](https://www.postgresql.org/)
-[![Python Tests](https://img.shields.io/badge/PyTest-30%20Passed-emerald.svg?style=flat)](./backend/tests)
+[![Python Tests](https://img.shields.io/badge/PyTest-38%20Passed-emerald.svg?style=flat)](./backend/tests)
 
-**QuantumFraud** is an enterprise-grade hybrid quantum-classical payment fraud detection platform. It combines gradient-boosted decision trees (**XGBoost**), a 4-qubit **Variational Quantum Classifier (VQC)** parameterized with `ZZFeatureMap` and `RealAmplitudes`, an optimal 30% / 70% weighted **Hybrid Risk Engine**, and **Automatic Account Discovery & Behavioural Analysis**.
+**QuantumFraud** is an enterprise-grade hybrid quantum-classical payment fraud detection platform. It combines gradient-boosted decision trees (**XGBoost**), a 4-qubit **Variational Quantum Classifier (VQC)** parameterized with `ZZFeatureMap` and `RealAmplitudes`, an optimal 50% / 50% weighted **Hybrid Risk Engine**, and **Automatic Account Discovery & Behavioural Analysis**.
 
 ---
 
 ## 🌟 Key Features
 
-- **Hybrid Quantum-Classical Risk Engine**: Merges classical gradient boosting (30% weight) with quantum statevector classifier inference (70% weight) for optimal fraud detection recall ($91.0\%$).
+- **Hybrid Quantum-Classical Risk Engine**: Merges classical gradient boosting (50% weight) with quantum statevector classifier inference (50% weight) for optimal fraud detection recall ($93.0\%$).
 - **Variational Quantum Classifier (VQC)**: Built on Qiskit 1.3 with a 4-qubit quantum circuit employing 2-repetition `ZZFeatureMap` data encoding and `RealAmplitudes` ansatz.
 - **Automatic Account Discovery**: Automatically tracks sender and receiver account histories, roles (`SENDER`, `RECEIVER`), transaction counts, and baseline metrics without requiring manual registration.
 - **Historical Behavioural Risk Analysis**: Computes point-in-time sender amount deviation ratios ($x\times$ historical mean), 24-hour transaction burst rates, and receiver historical fraud alert records with strict data leakage prevention.
@@ -152,7 +152,7 @@ docker-compose up --build
 cd backend
 python -m pytest
 ```
-*Output: 30 passed in ~28s.*
+*Output: 38 passed in ~45s.*
 
 ### Run System Benchmark
 ```bash

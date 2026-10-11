@@ -59,7 +59,7 @@ export default function Methodology() {
         'Grid-search optimization performed on Common Validation Subset maximizing F1-score.',
         'Optimal weights selected: 50% XGBoost + 50% VQC.',
         'Business Decision Thresholds: SAFE (<0.30), REVIEW (0.30–<0.70), ALERT (>=0.70).',
-        'Evaluated on Common Test Subset (200 records) yielding highest recall (91.00%).'
+        'Evaluated on Common Test Subset (200 records) yielding highest recall (93.00%).'
       ]
     },
     {
