@@ -18,14 +18,18 @@ IS_FALLBACK = False
 def get_engine():
     global ACTIVE_DB_TYPE, ACTIVE_DB_TARGET, IS_FALLBACK
     db_url = settings.DATABASE_URL
+    if db_url and db_url.startswith("postgres://"):
+        db_url = db_url.replace("postgres://", "postgresql://", 1)
     try:
-        if db_url.startswith("sqlite"):
+        if db_url and db_url.startswith("sqlite"):
+            os.makedirs(os.path.dirname(FALLBACK_DB_PATH), exist_ok=True)
             engine = create_engine(db_url, connect_args={"check_same_thread": False})
             ACTIVE_DB_TYPE = "sqlite"
             ACTIVE_DB_TARGET = db_url
             IS_FALLBACK = False
-        else:
-            engine = create_engine(db_url)
+            return engine
+        elif db_url:
+            engine = create_engine(db_url, pool_pre_ping=True)
             # Test connection
             with engine.connect() as conn:
                 conn.execute(text("SELECT 1"))
@@ -34,8 +38,11 @@ def get_engine():
             IS_FALLBACK = False
             logger.info(f"Connected to primary PostgreSQL database ({ACTIVE_DB_TARGET})")
             return engine
+        else:
+            raise ValueError("Empty DATABASE_URL provided")
     except Exception as e:
         logger.warning(f"Could not connect to primary database ({db_url}): {e}. Falling back to SQLite at {FALLBACK_DB_PATH}.")
+        os.makedirs(os.path.dirname(FALLBACK_DB_PATH), exist_ok=True)
         engine = create_engine(FALLBACK_DB_URL, connect_args={"check_same_thread": False})
         ACTIVE_DB_TYPE = "sqlite_fallback"
         ACTIVE_DB_TARGET = FALLBACK_DB_PATH

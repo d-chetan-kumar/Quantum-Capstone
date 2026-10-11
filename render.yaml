@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: quantum-fraud-system
+    env: docker
+    region: oregon
+    plan: free
+    dockerfilePath: Dockerfile
+    dockerContext: .
+    envVars:
+      - key: DATABASE_URL
+        value: sqlite:///quantum_fraud.db
+      - key: PORT
+        value: 8000

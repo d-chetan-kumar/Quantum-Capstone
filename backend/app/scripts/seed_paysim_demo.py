@@ -38,44 +38,82 @@ def get_paysim_data_path():
     for p in DATA_PATHS:
         if os.path.exists(p):
             return p
-    raise FileNotFoundError("PaySim CSV file not found in expected locations.")
+    return None
 
 def seed_paysim_demo(num_sample: int = 200, random_state: int = 42):
     init_db()
     db = SessionLocal()
 
     csv_path = get_paysim_data_path()
-    file_size = os.path.getsize(csv_path)
+    if csv_path:
+        file_size = os.path.getsize(csv_path)
 
-    # Read PaySim dataset with header skipping check
-    header_idx = None
-    with open(csv_path, 'r', encoding='utf-8') as f:
-        for idx, line in enumerate(f):
-            if "step,type,amount" in line and "log_amount" not in line:
-                header_idx = idx
-                break
+        # Read PaySim dataset with header skipping check
+        header_idx = None
+        with open(csv_path, 'r', encoding='utf-8') as f:
+            for idx, line in enumerate(f):
+                if "step,type,amount" in line and "log_amount" not in line:
+                    header_idx = idx
+                    break
 
-    if header_idx is None:
-        df = pd.read_csv(csv_path)
+        if header_idx is None:
+            df = pd.read_csv(csv_path)
+        else:
+            df = pd.read_csv(csv_path, skiprows=header_idx + 1, header=None, names=COLS)
+
+        df = df.sort_values(by='step')
+
+        total_rows = len(df)
+        train_idx = int(total_rows * 0.7)
+        val_idx = int(total_rows * 0.85)
+
+        test_df = df.iloc[val_idx:]
+
+        # Select deterministic test subset (100 fraud / 100 non-fraud for 200 rows)
+        num_fraud = num_sample // 2
+        num_non_fraud = num_sample - num_fraud
+
+        test_fraud = test_df[test_df['isFraud'] == 1].sample(n=min(num_fraud, (test_df['isFraud'] == 1).sum()), random_state=random_state)
+        test_non_fraud = test_df[test_df['isFraud'] == 0].sample(n=min(num_non_fraud, (test_df['isFraud'] == 0).sum()), random_state=random_state)
+
+        sample_test_df = pd.concat([test_fraud, test_non_fraud]).sample(frac=1, random_state=random_state).reset_index(drop=True)
     else:
-        df = pd.read_csv(csv_path, skiprows=header_idx + 1, header=None, names=COLS)
-
-    df = df.sort_values(by='step')
-
-    total_rows = len(df)
-    train_idx = int(total_rows * 0.7)
-    val_idx = int(total_rows * 0.85)
-
-    test_df = df.iloc[val_idx:]
-
-    # Select deterministic test subset (100 fraud / 100 non-fraud for 200 rows)
-    num_fraud = num_sample // 2
-    num_non_fraud = num_sample - num_fraud
-
-    test_fraud = test_df[test_df['isFraud'] == 1].sample(n=min(num_fraud, (test_df['isFraud'] == 1).sum()), random_state=random_state)
-    test_non_fraud = test_df[test_df['isFraud'] == 0].sample(n=min(num_non_fraud, (test_df['isFraud'] == 0).sum()), random_state=random_state)
-
-    sample_test_df = pd.concat([test_fraud, test_non_fraud]).sample(frac=1, random_state=random_state).reset_index(drop=True)
+        np.random.seed(random_state)
+        rows = []
+        num_fraud = num_sample // 2
+        num_non_fraud = num_sample - num_fraud
+        for i in range(num_non_fraud):
+            amt = round(float(np.random.uniform(10.0, 5000.0)), 2)
+            old_bal = round(amt + float(np.random.uniform(50.0, 10000.0)), 2)
+            rows.append({
+                "step": int(np.random.randint(1, 100)),
+                "type": str(np.random.choice(["PAYMENT", "CASH_IN", "DEBIT"])),
+                "amount": amt,
+                "nameOrig": f"C_SAFE_{i:04d}",
+                "oldbalanceOrg": old_bal,
+                "newbalanceOrig": round(old_bal - amt, 2),
+                "nameDest": f"M_MERCHANT_{i:04d}",
+                "oldbalanceDest": float(np.random.uniform(0.0, 5000.0)),
+                "newbalanceDest": float(np.random.uniform(5000.0, 10000.0)),
+                "isFraud": 0,
+                "isFlaggedFraud": 0
+            })
+        for i in range(num_fraud):
+            amt = round(float(np.random.uniform(50000.0, 500000.0)), 2)
+            rows.append({
+                "step": int(np.random.randint(1, 100)),
+                "type": str(np.random.choice(["TRANSFER", "CASH_OUT"])),
+                "amount": amt,
+                "nameOrig": f"C_SUSP_{i:04d}",
+                "oldbalanceOrg": amt,
+                "newbalanceOrig": 0.0,
+                "nameDest": f"C_RECV_{i:04d}",
+                "oldbalanceDest": 0.0,
+                "newbalanceDest": 0.0,
+                "isFraud": 1,
+                "isFlaggedFraud": 0
+            })
+        sample_test_df = pd.DataFrame(rows).sample(frac=1, random_state=random_state).reset_index(drop=True)
 
     imported_count = 0
     skipped_count = 0
